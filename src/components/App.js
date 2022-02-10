@@ -5,11 +5,13 @@ import {authService} from "fbase";
 function App() {
     const [init, setInit] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userObj, setUserObj] = useState(null);
 
     useEffect(() => {
         authService.onAuthStateChanged((user) => {
             if (user) {
                 setIsLoggedIn(user);
+                setUserObj(user);
             }
             else{
                 setIsLoggedIn(false);
@@ -20,10 +22,12 @@ function App() {
     // deps 를 [] 로 한 것은 최초로 렌더링이 완료되었을 때 1회만 동작
     return (
         <>
-            {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
+            {init ? (
+                <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+                ) : (
+                    "initializing..."
+            )}
             <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
-            {/*JSX에 자바스크립트 코드를 삽입할 때는 코드를 중괄호로 감싸줘야 해
-        주석도 자바스크립트 코드구나*/}
         </>
     );
 }
