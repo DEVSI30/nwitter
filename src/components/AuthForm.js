@@ -24,11 +24,10 @@ const AuthForm = () => {
         // 이를 막기 위해 preventDefault를 써서 새로고침이 일어나지 않도록 한다.
         event.preventDefault();
         try {
-            let data;
             if (newAccount) {
-                data = await authService.createUserWithEmailAndPassword(email, password);
+                await authService.createUserWithEmailAndPassword(email, password);
             } else {
-                data = await authService.signInWithEmailAndPassword(email, password);
+                await authService.signInWithEmailAndPassword(email, password);
             }
         } catch (error){
             setError(error.message);
