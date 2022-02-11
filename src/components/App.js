@@ -10,8 +10,11 @@ function App() {
     useEffect(() => {
         authService.onAuthStateChanged((user) => {
             if (user) {
-                setIsLoggedIn(user);
-                setUserObj(user);
+                setUserObj({
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    updateProfile: (args) => user.updateProfile(args),
+                });
             }
             else{
                 setIsLoggedIn(false);
@@ -20,10 +23,23 @@ function App() {
         });
     }, []);
     // deps 를 [] 로 한 것은 최초로 렌더링이 완료되었을 때 1회만 동작
+
+    const refreshUser = () => {
+        const user = authService.currentUser;
+        setUserObj({
+            uid: user.uid,
+            displayName: user.displayName,
+            updateProfile: (args) => user.updateProfile(args),
+        });
+    };
+
     return (
         <>
             {init ? (
-                <AppRouter isLoggedIn={isLoggedIn} userObj={userObj} />
+                <AppRouter
+                    refreshUser = {refreshUser}
+                    isLoggedIn={Boolean(userObj)}
+                    userObj={userObj} />
                 ) : (
                     "initializing..."
             )}
